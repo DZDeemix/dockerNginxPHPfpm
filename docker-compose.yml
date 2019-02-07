@@ -1,0 +1,47 @@
+version: '3.4'
+
+services:
+  web:
+    image: nginx
+    volumes:
+    - ./Docker/nginx/conf.d:/etc/nginx/conf.d
+    - ./html:/var/www/html
+    - ./Docker/nginx/Logs:/var/log/nginx/
+    ports:
+    - "80:80"
+    - "433:433"
+    env_file:
+    - variables.env
+
+  php:
+#    build: ./Docker/build/xdebug
+    image: bitnami/php-fpm:7.3-ol-7-prod
+    expose:
+    - "9000"
+    volumes:
+    - ./html:/var/www/html
+    - ./Docker/php/php.ini:/usr/local/etc/php/php.ini
+    - ./Docker/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
+    env_file:
+    - variables.env
+
+  mysql:
+    image: mysql:5.6
+    expose:
+    - "3306"
+    ports:
+    - "3306:3306"
+    env_file:
+    - variables.env
+    volumes:
+    - ./Docker/mysql:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:4.7
+    depends_on:
+    - mysql
+    ports:
+    - "8080:80"
+    env_file:
+    - variables.env
+
