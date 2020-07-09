@@ -17,8 +17,6 @@ services:
     build:
       context: ./
       dockerfile: ./docker/php/php-fpm.docker
-    expose:
-      - "9000"
     volumes:
       - ./:/var/www
       - ./docker/php/php.ini:/usr/local/etc/php/php.ini
@@ -29,8 +27,6 @@ services:
 
   mysql:
     image: mysql:5.6
-    expose:
-      - "3306"
     ports:
       - "3306:3306"
     env_file:
