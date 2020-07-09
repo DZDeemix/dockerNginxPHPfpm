@@ -1,5 +1,4 @@
 version: '3.4'
-
 services:
   web:
     image: nginx
@@ -24,6 +23,14 @@ services:
       - ./docker/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
     env_file:
       - variables.env
+
+  php-cli:
+    build:
+      context: ./
+      dockerfile: ./docker/php-cli/php-cli.docker
+    volumes:
+      - ./:/var/www
+    tty: true
 
   mysql:
     image: mysql:5.6
