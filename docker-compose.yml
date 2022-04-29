@@ -4,7 +4,7 @@ services:
     image: nginx
     volumes:
       - ./docker/nginx/conf.d:/etc/nginx/conf.d
-      - ./:/var/www
+      - ./www:/var/www
       - ./docker/nginx/logs:/var/log/nginx/
     ports:
       - "80:80"
@@ -17,9 +17,9 @@ services:
       context: ./
       dockerfile: ./docker/php/php-fpm.docker
     volumes:
-      - ./:/var/www
+      - ./www:/var/www
       - ./docker/php/php.ini:/usr/local/etc/php/php.ini
-      - ./docker/php/conf.d:/usr/local/etc/php/conf.d
+      - ./docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
       - ./docker/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
     env_file:
       - variables.env
@@ -29,17 +29,28 @@ services:
       context: ./
       dockerfile: ./docker/php-cli/php-cli.docker
     volumes:
-      - ./:/var/www
+      - ./www:/var/www
+      - ./docker/php-cli/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
     tty: true
+    environment:
+      - PHP_IDE_CONFIG=serverName=localhost
 
-  mysql:
-    image: mysql:8.0
+  postgres:
+    image: postgres
     ports:
-      - "3306:3306"
+      - "5432:5432"
     env_file:
       - variables.env
     volumes:
-      - ./docker/mysql:/var/lib/mysql
+      - ./docker/postgres/data:/var/lib/postgresql/data
+      - ./docker/postgres/sql:/var/sql
 
-
+  mailhog:
+    image: mailhog/mailhog
+    restart: always
+    logging:
+      driver: "none"
+    ports:
+      - "8025:8025"
+      - "1025:1025"
 
