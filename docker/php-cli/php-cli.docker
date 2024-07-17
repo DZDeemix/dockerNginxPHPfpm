@@ -1,4 +1,4 @@
-FROM php:8.0-cli
+FROM php:8.3-cli
 
 ARG USER_ID
 ARG GROUP_ID
@@ -56,12 +56,15 @@ RUN docker-php-ext-configure \
 RUN pecl install -o -f imagick\
     &&  docker-php-ext-enable imagick
 
-RUN pecl install xdebug-3.1.4 \
+RUN pecl install xdebug-3.3.2 \
     &&  docker-php-ext-enable xdebug
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-WORKDIR /var/www
+RUN pecl install xhprof \
+    &&  docker-php-ext-enable xhprof
+
+WORKDIR /var/www/symfony_app
 
 USER "${USER_ID}:${GROUP_ID}"
