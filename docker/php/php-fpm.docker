@@ -53,7 +53,7 @@ RUN docker-php-ext-configure \
     && docker-php-ext-install \
     gd
 
-RUN pecl install -o -f imagick\
+RUN pecl install imagick \
     &&  docker-php-ext-enable imagick
 
 RUN pecl install xdebug-3.3.2 \
@@ -63,6 +63,6 @@ RUN pecl install xhprof \
     &&  docker-php-ext-enable xhprof
 
 
-WORKDIR /var/www/symfony_app
+WORKDIR /var/www
 
 USER "${USER_ID}:${GROUP_ID}"
